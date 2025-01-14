@@ -59,7 +59,7 @@ export default function LandingPage() {
         className="relative bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
       >
-        <div className="absolute inset-0 bg-indigo-700 to-transparent"></div>
+        <div className="absolute inset-0 bg-[#E8F9FF] to-transparent"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
           <div className="text-center text-white">
             <motion.h1
@@ -178,7 +178,7 @@ export default function LandingPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-indigo-600 text-white py-16">
+      <div className="bg-[#E8F9FF] text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
