@@ -1,37 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Soulsadhna - Habit Building Program
 
-## Getting Started
+![Soulsadhna Banner](public/images/banner.png)
 
-First, run the development server:
+Soulsadhna is India's first comprehensive habit-building program that combines traditional wellness practices with modern techniques. Our platform offers yoga, meditation, and fitness classes designed to help users build lasting healthy habits.
 
+## 🌟 Features
+
+- **Live Online Classes**: Daily yoga and fitness sessions with expert trainers
+- **Flexible Scheduling**: Multiple time slots to fit your routine
+- **Progress Tracking**: Monitor your wellness journey
+- **Community Support**: Connect with like-minded individuals
+- **Expert Guidance**: Learn from certified instructors
+- **Multi-device Access**: Join from anywhere, on any device
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18.x or higher
+- npm or yarn package manager
+- Git
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/soulsadhna.git
+cd soulsadhna
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Update the `.env.local` file with your configuration.
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3001](http://localhost:3001) to view the application.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: [Next.js 14](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Authentication**: Custom Authentication
+- **Database**: [MongoDB](https://www.mongodb.com/atlas)
+- **Deployment**: [Vercel](https://vercel.com)
 
-## Learn More
+## 📱 Key Components
 
-To learn more about Next.js, take a look at the following resources:
+- **Authentication System**: Secure user authentication with SSO options
+- **Live Session Management**: Real-time class scheduling and attendance
+- **Progress Dashboard**: Personal progress tracking and analytics
+- **Community Features**: User interaction and support system
+- **Admin Panel**: Comprehensive management dashboard
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Testing
+```bash
+# Run tests
+npm run test
 
-## Deploy on Vercel
+# Run tests with coverage
+npm run test:coverage
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# soulsadhnaFE
+The application is automatically deployed to Vercel with each push to the main branch.
+
+For manual deployment:
+```bash
+npm run build
+npm run start
+```
