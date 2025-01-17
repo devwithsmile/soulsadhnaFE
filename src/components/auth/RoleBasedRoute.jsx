@@ -1,12 +1,12 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import { hasPermission } from "@/utils/roles";
+import { hasRole } from "@/utils/roles";
 
-export function RoleBasedRoute({ children, requiredPermission }) {
+export function RoleBasedRoute({ children, requiredRole }) {
   const { user } = useAuth();
 
-  if (!user || !hasPermission(user.role, requiredPermission)) {
+  if (!user || !hasRole(user.role, requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

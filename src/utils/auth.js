@@ -1,23 +1,26 @@
-import { jwtVerify } from "jose";
+import { jwtDecode } from "jwt-decode";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-
-export async function verifyAuth(token) {
+export function verifyAuth(token) {
   try {
-    const verified = await jwtVerify(
-      token,
-      new TextEncoder().encode(JWT_SECRET)
-    );
-    return verified.payload;
+    const decodedToken = jwtDecode(token);
+
+    // Check if token is expired
+    const isExpired = decodedToken.exp * 1000 < Date.now();
+    if (isExpired) {
+      throw new Error("Token expired");
+    }
+
+    return decodedToken;
   } catch (error) {
     throw new Error("Invalid token");
   }
 }
- 
+
+// Helper functions for token handling
 export function getTokenExpirationDate(token) {
   try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return new Date(payload.exp * 1000);
+    const decoded = jwtDecode(token);
+    return new Date(decoded.exp * 1000);
   } catch (error) {
     return null;
   }
