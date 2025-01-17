@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
-export default function GoogleCallback() {
+function GoogleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
@@ -19,7 +20,6 @@ export default function GoogleCallback() {
         // Verify state to prevent CSRF attacks
         if (state !== savedState) {
           console.log(state, savedState);
-
           throw new Error("Invalid state parameter");
         }
 
@@ -54,7 +54,6 @@ export default function GoogleCallback() {
       } catch (error) {
         console.error("Google callback error:", error);
         // console.log(error);
-
         router.push("/login?error=google-auth-failed");
       }
     };
@@ -68,5 +67,19 @@ export default function GoogleCallback() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
     </div>
+  );
+}
+
+export default function GoogleCallback() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      }
+    >
+      <GoogleCallbackContent />
+    </Suspense>
   );
 }
