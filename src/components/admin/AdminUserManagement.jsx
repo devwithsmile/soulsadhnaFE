@@ -2,14 +2,29 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { UserList } from "./UserList";
 
+// Dummy user data
+const dummyUsers = [
+  { id: 1, name: "Alice Johnson", email: "alice@example.com", role: "User" },
+  { id: 2, name: "Bob Smith", email: "bob@example.com", role: "Admin" },
+  { id: 3, name: "Charlie Brown", email: "charlie@example.com", role: "User" },
+  { id: 4, name: "Diana Prince", email: "diana@example.com", role: "User" },
+  { id: 5, name: "Edward Elric", email: "edward@example.com", role: "User" },
+  { id: 6, name: "Fiona Gallagher", email: "fiona@example.com", role: "Admin" },
+  { id: 7, name: "George Costanza", email: "george@example.com", role: "User" },
+  { id: 8, name: "Hannah Baker", email: "hannah@example.com", role: "User" },
+  { id: 9, name: "Ian Malcolm", email: "ian@example.com", role: "User" },
+  { id: 10, name: "Jessica Jones", email: "jessica@example.com", role: "User" },
+];
+
 export function AdminUserManagement() {
   const { user } = useAuth();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(dummyUsers); // Set initial users to dummy data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
+    setLoading(false);
+    // fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
