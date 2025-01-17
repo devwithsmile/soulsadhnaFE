@@ -106,7 +106,7 @@ export function RegisterForm() {
             autoComplete="email"
             required
             value={formData.email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Email address"
           />
@@ -124,7 +124,7 @@ export function RegisterForm() {
             autoComplete="new-password"
             required
             value={formData.password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Password"
           />
@@ -152,7 +152,7 @@ export function RegisterForm() {
             autoComplete="new-password"
             required
             value={formData.confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={handleChange}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Confirm Password"
           />

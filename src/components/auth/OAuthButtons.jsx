@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { useAuth } from "@/hooks/useAuth";
 
 export function OAuthButtons({ variant = "login" }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
@@ -14,23 +12,24 @@ export function OAuthButtons({ variant = "login" }) {
       // Google OAuth2 configuration
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
       const redirectUri = `${window.location.origin}/api/auth/google/callback`;
-      
+
       // Generate random state for security
       const state = Math.random().toString(36).substring(7);
-      localStorage.setItem('oauth_state', state);
+      localStorage.setItem("oauth_state", state);
 
       // Construct Google OAuth URL
-      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+      const googleAuthUrl =
+        `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${clientId}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `response_type=code&` +
-        `scope=${encodeURIComponent('email profile')}&` +
+        `scope=${encodeURIComponent("email profile")}&` +
         `state=${state}`;
 
       // Redirect to Google sign-in
       window.location.href = googleAuthUrl;
     } catch (error) {
-      console.error('Google sign-in error:', error);
+      console.error("Google sign-in error:", error);
       setIsLoading(false);
     }
   };
