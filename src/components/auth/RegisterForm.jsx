@@ -57,6 +57,7 @@ export function RegisterForm() {
         throw new Error("Registration failed");
       }
 
+      // TODO: redirect them to login page... ???
       // Auto login after successful registration
       await login({
         email: formData.email,

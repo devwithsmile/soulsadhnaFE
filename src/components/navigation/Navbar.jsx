@@ -11,17 +11,7 @@ export function Navbar() {
   const { user, logout, isAdmin } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
-  // Handle scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -45,7 +35,7 @@ export function Navbar() {
 
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
-  }, [isMenuOpen]); // Add isMenuOpen as dependency
+  }, [isMenuOpen]);
 
   // Close mobile menu on navigation
   useEffect(() => {
@@ -53,49 +43,31 @@ export function Navbar() {
     setIsProfileOpen(false);
   }, [pathname]);
 
-  // Function to determine if we're on the homepage
-  const isHomePage = pathname === "/";
-
-  // Function to determine text color based on page and scroll position
-  const getTextColor = () => {
-    if (isHomePage && !scrolled) {
-      return "text-white";
-    }
-    return "text-gray-700";
-  };
-
-  const isActivePath = (path) => pathname === path;
-
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled || !isHomePage ? "bg-white shadow-md" : "bg-transparent"
-      }`}
+      className={`w-full z-50 bg-white ${
+        pathname === "/" ? "" : "shadow-sm border-b"
+      }  border-gray-200 top-0`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl xl:max-w-full mx-auto xl:mx-20 2xl:mx-14 px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo only */}
+          {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <span
-                className={`text-xl font-bold transition-colors duration-300 ${
-                  scrolled || !isHomePage ? "text-indigo-600" : "text-white"
-                }`}
-              >
+              <span className="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                 Soulsadhna
               </span>
             </Link>
           </div>
 
-          {/* Desktop Right Navigation */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-4">
             {user ? (
               <div className="relative" id="profile-menu">
                 <button
                   id="profile-button"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300
-                    ${getTextColor()} hover:text-indigo-600`}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
                 >
                   <FaUser className="h-4 w-4" />
                   <span>{user.email}</span>
@@ -107,27 +79,21 @@ export function Navbar() {
                     <div className="py-1" role="menu">
                       <Link
                         href="/dashboard"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         Dashboard
-                      </Link>
-                      <Link
-                        href="/profile"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Profile
                       </Link>
                       {isAdmin && (
                         <Link
                           href="/admin"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
                           Admin Panel
                         </Link>
                       )}
                       <button
                         onClick={logout}
-                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 flex items-center space-x-2"
                       >
                         <FaSignOutAlt className="h-4 w-4" />
                         <span>Logout</span>
@@ -140,14 +106,13 @@ export function Navbar() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/login"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300
-                    ${getTextColor()} hover:text-indigo-600`}
+                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors duration-300"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition-colors"
                 >
                   Sign Up
                 </Link>
@@ -160,11 +125,10 @@ export function Navbar() {
             <button
               id="mobile-button"
               onClick={(e) => {
-                e.stopPropagation(); // Prevent event bubbling
+                e.stopPropagation();
                 setIsMenuOpen(!isMenuOpen);
               }}
-              className={`inline-flex items-center justify-center p-2 rounded-md transition-colors duration-300
-                ${getTextColor()} hover:text-indigo-600`}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition-colors"
               aria-expanded={isMenuOpen}
               aria-label="Toggle menu"
             >
@@ -178,12 +142,12 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu with improved positioning and transition */}
+      {/* Mobile menu */}
       {isMenuOpen && (
         <div
           id="mobile-menu"
-          className="absolute top-16 left-0 right-0 md:hidden bg-white shadow-lg border-t transform transition-transform duration-200 ease-in-out"
-          onClick={(e) => e.stopPropagation()} // Prevent clicks inside menu from closing it
+          className="absolute top-16 left-0 right-0 md:hidden bg-white shadow-lg border-t"
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
             {user ? (
@@ -191,16 +155,9 @@ export function Navbar() {
                 <Link
                   href="/dashboard"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
-                  onClick={() => setIsMenuOpen(false)} // Close menu on link click
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/profile"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Profile
+                  Home
                 </Link>
                 {isAdmin && (
                   <Link
