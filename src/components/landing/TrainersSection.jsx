@@ -11,7 +11,7 @@ export function TrainersSection() {
         </h2>
         <div className="max-w-6xl mx-auto flex flex-col justify-center items-center gap-16">
           {/* Trainer 1 */}
-          <div className="flex flex-col md:flex-row justify-start items-center gap-2 w-full">
+          <div className="flex flex-col md:flex-row justify-start items-center gap-6 w-full">
             <div className="md:w-1/2 flex justify-center">
               <Image
                 src="/images/trainer-1.jpg"
@@ -60,7 +60,7 @@ export function TrainersSection() {
           </div>
 
           {/* Trainer 2 */}
-          <div className="flex flex-col md:flex-row-reverse justify-center items-center gap-2 w-full">
+          <div className="flex flex-col md:flex-row-reverse justify-center items-center gap-6 w-full">
             <div className="md:w-1/2 flex justify-center">
               <Image
                 src="/images/trainer-2.jpg"
