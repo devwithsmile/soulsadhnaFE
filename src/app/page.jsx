@@ -20,8 +20,8 @@ export default function LandingPage() {
       <CTASection />
       <TrainersSection />
       <TestimonialsSection />
-      <FAQSection />
       <FoundersSection />
+      <FAQSection />
     </div>
   );
 }
