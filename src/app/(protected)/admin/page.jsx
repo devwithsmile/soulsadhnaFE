@@ -4,10 +4,17 @@ import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 
 export default function AdminDashboard() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-semibold mb-6">Admin Dashboard</h1>
-          <AdminUserManagement />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 md:my-8">
+        <div className="text-center md:text-left mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Admin Dashboard
+          </h1>
+          <p className="mt-2 text-sm md:text-base text-gray-600">
+            Manage your users and monitor platform activity
+          </p>
+        </div>
+        <AdminUserManagement />
       </div>
     </div>
   );

@@ -1,28 +1,24 @@
-export function UserListItem({ user, onDelete }) {
+export function UserListItem({ user }) {
   return (
-    <li>
+    <li className="hover:bg-gray-50 transition-colors duration-150">
       <div className="px-4 py-4 sm:px-6">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <p className="text-sm font-medium text-indigo-600 truncate">
+        <div className="flex items-center space-x-4">
+          {/* User Avatar */}
+          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+            <span className="text-indigo-600 font-medium text-sm">
+              {user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </span>
+          </div>
+
+          {/* User Details */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm md:text-base font-medium text-gray-900 truncate">
               {user.name}
             </p>
-            <p className="text-sm text-gray-500">{user.email}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-              {user.role}
-            </span>
-            <button
-              className="text-red-600 hover:text-red-900 text-sm font-medium"
-              onClick={() => {
-                if (confirm("Are you sure you want to delete this user?")) {
-                  onDelete(user.id);
-                }
-              }}
-            >
-              Delete
-            </button>
+            <p className="text-sm text-gray-500 truncate">{user.email}</p>
           </div>
         </div>
       </div>
