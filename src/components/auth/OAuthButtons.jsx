@@ -11,7 +11,7 @@ export function OAuthButtons({ variant = "login" }) {
     try {
       // Google OAuth2 configuration
       const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-      const redirectUri = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/callback`;
+      const redirectUri = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback`;
 
       // Generate random state for security
       const state = Math.random().toString(36).substring(7);
