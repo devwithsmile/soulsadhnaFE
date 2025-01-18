@@ -49,8 +49,8 @@ function GoogleCallbackContent() {
         // Use the existing login mechanism to set the token and user state
         await login({ token });
 
-        // Redirect to dashboard or home page
-        router.push("/dashboard");
+        // Redirect to Home page
+        router.push("/home");
       } catch (error) {
         console.error("Google callback error:", error);
         // console.log(error);
