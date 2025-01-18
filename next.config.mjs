@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["xsgames.co"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "xsgames.co",
+        port: "", // Leave empty for default port
+        pathname: "/**", // Allow all paths
+      },
+    ],
   },
 };
 
