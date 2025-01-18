@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { UserList } from "./UserList";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
@@ -32,9 +31,7 @@ const dummyUsers = Array.from({ length: 50 }, (_, index) => ({
 }));
 
 export function AdminUserManagement() {
-  const { user } = useAuth();
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
@@ -42,7 +39,6 @@ export function AdminUserManagement() {
   useEffect(() => {
     // Set dummy data initially
     setUsers(dummyUsers);
-    setLoading(false);
     // fetchUsers();
   }, []);
 
@@ -67,8 +63,6 @@ export function AdminUserManagement() {
       setUsers(data);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -81,14 +75,6 @@ export function AdminUserManagement() {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-48">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
