@@ -21,7 +21,7 @@ export function LoginForm() {
 
     try {
       await login({ email, password });
-      router.push("/dashboard"); // Redirect to dashboard after successful login
+      router.push("/home"); // Redirect to home after successful login
     } catch (err) {
       setError("Failed to login. Please check your credentials.");
     } finally {

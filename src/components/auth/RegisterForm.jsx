@@ -64,7 +64,7 @@ export function RegisterForm() {
         password: formData.password,
       });
 
-      router.push("/dashboard");
+      router.push("/home");
     } catch (err) {
       setError("Failed to register. Please try again.");
     } finally {
