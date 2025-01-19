@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
 
@@ -13,10 +14,13 @@ export function HeroSection() {
             <p className="text-lg text-gray-600 mb-8">
               Start your journey to a better life with mindful practices
             </p>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors flex items-center">
+            <Link
+              href="/register"
+              className="w-60 bg-blue-600 text-white px-8 py-3 rounded-full font-medium hover:bg-blue-700 transition-colors flex items-center"
+            >
               Try Free Sessions
               <FaArrowRight className="ml-2" />
-            </button>
+            </Link>
             <div className="mt-8 flex items-center gap-4">
               <div className="flex -space-x-3">
                 {[10, 11, 12, 13].map((i) => (
