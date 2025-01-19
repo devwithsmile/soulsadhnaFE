@@ -61,10 +61,7 @@ export function BenefitsSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {benefits.map((benefit, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6"
-            >
+            <div key={index} className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex items-start space-x-4">
                 <div
                   className={`w-12 h-12 ${benefit.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}
