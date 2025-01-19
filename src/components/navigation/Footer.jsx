@@ -8,21 +8,21 @@ export function Footer() {
 
   const footerSections = {
     Company: [
-      { label: "About Us", href: "/about" },
-      { label: "Contact", href: "/contact" },
-      { label: "Blog", href: "/blog" },
+      { label: "About Us", href: "/#" },
+      { label: "Contact", href: "/#" },
+      { label: "Blog", href: "/#" },
     ],
     Classes: [
-      { label: "Beginner Yoga", href: "/classes/beginner" },
-      { label: "Advanced Flows", href: "/classes/advanced" },
-      { label: "Meditation", href: "/classes/meditation" },
-      { label: "Workshop", href: "/classes/workshops" },
+      { label: "Beginner Yoga", href: "/#" },
+      { label: "Advanced Flows", href: "/#" },
+      { label: "Meditation", href: "/#" },
+      { label: "Workshop", href: "/#" },
     ],
     Support: [
-      { label: "Help Center", href: "/help" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "FAQ", href: "/faq" },
+      { label: "Help Center", href: "/#" },
+      { label: "Privacy Policy", href: "/#" },
+      { label: "Terms of Service", href: "/#" },
+      { label: "FAQ", href: "/#" },
     ],
   };
 
