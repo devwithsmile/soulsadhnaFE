@@ -40,22 +40,12 @@ export function RegisterForm() {
     setLoading(true);
 
     try {
-      // Make API call to register
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
+      // Use the register function from AuthContext
+      await register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
       });
-
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
 
       // TODO: redirect them to login page... ???
       // Auto login after successful registration
