@@ -1,37 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+import { useState } from "react";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm();
 
+  const onSubmit = async (data) => {
+    setLoading(true);
     try {
-      await login({ email, password });
-      router.push("/home"); // Redirect to home after successful login
+      const response = await login(data);
+      if (response?.success) {
+        router.push("/home");
+      } else {
+        setError("root", {
+          type: "manual",
+          message: "Invalid credentials. Please try again.",
+        });
+      }
     } catch (err) {
-      setError("Failed to login. Please check your credentials.");
+      setError("root", {
+        type: "manual",
+        message: "Invalid credentials. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-      {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+      {errors.root && (
+        <div className="text-red-500 text-sm text-center">
+          {errors.root.message}
+        </div>
+      )}
 
       <div className="rounded-md shadow-sm -space-y-px">
         {/* Email Field */}
@@ -41,15 +57,20 @@ export function LoginForm() {
           </label>
           <input
             id="email"
-            name="email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
             type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Email address"
           />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -59,15 +80,16 @@ export function LoginForm() {
           </label>
           <input
             id="password"
-            name="password"
+            {...register("password", {
+              required: "Password is required"
+            })}
             type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Password"
           />
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+          )}
           <div
             className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
             onClick={() => setShowPassword(!showPassword)}

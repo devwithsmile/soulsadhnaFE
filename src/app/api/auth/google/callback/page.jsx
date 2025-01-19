@@ -28,14 +28,13 @@ function GoogleCallbackContent() {
         // localStorage.removeItem("oauth_state");
 
         // Send the authorization code to your backend
-        const response = await fetch(
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+          { code },
           {
-            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ code }),
           }
         );
 

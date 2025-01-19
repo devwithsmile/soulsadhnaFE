@@ -40,14 +40,13 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        credentials,
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credentials),
+            'Content-Type': 'application/json'
+          }
         }
       );
 

@@ -46,7 +46,7 @@ export function AdminUserManagement() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,
         {
           headers: {
@@ -121,11 +121,10 @@ export function AdminUserManagement() {
               <button
                 key={number}
                 onClick={() => paginate(number)}
-                className={`px-3 py-1 rounded-md text-sm font-medium ${
-                  currentPage === number
+                className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === number
                     ? "bg-indigo-600 text-white"
                     : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {number}
               </button>
