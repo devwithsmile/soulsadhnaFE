@@ -17,7 +17,7 @@ export default function HomePage() {
           {showPaymentSuccess && (
             <PaymentSuccessMessage
               onClose={() => setShowPaymentSuccess(false)}
-              customerName={username}
+              customerName={user?.name || username}
               showAutoClose={false}
             />
           )}
