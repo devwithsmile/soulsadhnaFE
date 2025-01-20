@@ -18,6 +18,8 @@ function GoogleCallbackContent() {
         const state = searchParams.get("state");
         const savedState = localStorage.getItem("oauth_state");
 
+        
+
         // Verify state to prevent CSRF attacks
         if (state !== savedState) {
           console.log(state, savedState);
