@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { UserList } from "./UserList";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import axios from "axios";
 
 // Dummy user data (expanded)
 const dummyUsers = Array.from({ length: 50 }, (_, index) => ({
@@ -55,14 +56,14 @@ export function AdminUserManagement() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const data = await response.json();
-      setUsers(data);
+      // Axios automatically throws for non-2xx responses
+      // and response.data already contains the parsed JSON
+      setUsers(response.data);
     } catch (err) {
-      setError(err.message);
+      // Get the most specific error message available
+      const errorMessage =
+        err.response?.data?.message || err.message || "Failed to fetch users";
+      setError(errorMessage);
     }
   };
 
@@ -121,10 +122,11 @@ export function AdminUserManagement() {
               <button
                 key={number}
                 onClick={() => paginate(number)}
-                className={`px-3 py-1 rounded-md text-sm font-medium ${currentPage === number
+                className={`px-3 py-1 rounded-md text-sm font-medium ${
+                  currentPage === number
                     ? "bg-indigo-600 text-white"
                     : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
-                  }`}
+                }`}
               >
                 {number}
               </button>
