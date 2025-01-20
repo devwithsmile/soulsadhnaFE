@@ -4,6 +4,7 @@ import { createContext, useState, useEffect } from "react";
 import { ROLES } from "@/utils/roles";
 import { verifyAuth } from "@/utils/auth";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -40,31 +41,42 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        credentials,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(credentials),
         }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Login failed");
+      const { token } = response.data;
+
+      if (!token) {
+        throw new Error("Login failed");
       }
 
-      const { token } = await response.json();
       localStorage.setItem("token", token);
 
       // Use verifyAuth to set user data from token
       const userData = verifyAuth(token);
       setUser(userData);
-      return userData;
+
+      return {
+        success: true,
+        user: userData,
+      };
     } catch (error) {
-      throw error;
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An error occurred during login";
+
+      return {
+        success: false,
+        error: errorMessage,
+      };
     }
   };
 
@@ -76,31 +88,50 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        userData,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(userData),
         }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Registration failed");
+      const { token } = response.data;
+
+      if (!token) {
+        throw new Error("Registration failed");
       }
 
-      const { token } = await response.json();
       localStorage.setItem("token", token);
 
       // Use verifyAuth to set user data from token
       const newUser = verifyAuth(token);
       setUser(newUser);
-      return newUser;
+
+      return {
+        success: true,
+        user: newUser,
+      };
     } catch (error) {
-      throw error;
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An error occurred during registration";
+
+      // Handle specific error cases
+      if (error.response?.status === 409) {
+        return {
+          success: false,
+          error: "Email already exists",
+        };
+      }
+
+      return {
+        success: false,
+        error: errorMessage,
+      };
     }
   };
 

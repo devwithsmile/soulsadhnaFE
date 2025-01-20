@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { UserList } from "./UserList";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import axios from "axios";
 
 // Dummy user data (expanded)
 const dummyUsers = Array.from({ length: 50 }, (_, index) => ({
@@ -46,7 +47,7 @@ export function AdminUserManagement() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(
+      const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/users`,
         {
           headers: {
@@ -55,14 +56,14 @@ export function AdminUserManagement() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const data = await response.json();
-      setUsers(data);
+      // Axios automatically throws for non-2xx responses
+      // and response.data already contains the parsed JSON
+      setUsers(response.data);
     } catch (err) {
-      setError(err.message);
+      // Get the most specific error message available
+      const errorMessage =
+        err.response?.data?.message || err.message || "Failed to fetch users";
+      setError(errorMessage);
     }
   };
 

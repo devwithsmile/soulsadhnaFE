@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import axios from "axios";
 
 function GoogleCallbackContent() {
   const router = useRouter();
@@ -21,31 +22,24 @@ function GoogleCallbackContent() {
         // Verify state to prevent CSRF attacks
         if (state !== savedState) {
           console.log(state, savedState);
-          throw new Error("Invalid state parameter");
+          throw new Error(
+            "Security verification failed: Invalid state parameter"
+          );
         }
 
-        // Clear the stored state
-        // localStorage.removeItem("oauth_state");
-
         // Send the authorization code to your backend
-        const response = await fetch(
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+          { code },
           {
-            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ code }),
           }
         );
 
-        if (!response.ok) {
-          console.log(response);
-          throw new Error("Failed to authenticate with Google");
-        }
-
-        // Get the JWT token from your backend
-        const { token } = await response.json();
+        // Axios response.data already contains the parsed JSON
+        const { token } = response.data;
 
         // Use the existing login mechanism to set the token and user state
         await login({ token });
@@ -53,9 +47,9 @@ function GoogleCallbackContent() {
         // Redirect to Home page
         router.push("/home");
       } catch (error) {
-        console.error("Google callback error:", error);
-        // console.log(error);
-        router.push("/login?error=google-auth-failed");
+        console.error("Google callback error:", error.message || error);
+        const errorMessage = error.response?.data?.message || error.message;
+        router.push(`/login?error=${encodeURIComponent(errorMessage)}`);
       }
     };
 

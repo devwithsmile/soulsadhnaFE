@@ -1,71 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+import { useState } from "react";
 
 export function RegisterForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth();
+  const { register: authRegister } = useAuth();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  const password = watch("password");
 
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
+  const onSubmit = async (data) => {
     setLoading(true);
-
     try {
-      // Use the register function from AuthContext
-      await register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
+      const result = await authRegister({
+        name: data.name,
+        email: data.email,
+        password: data.password,
       });
 
-      // TODO: redirect them to login page... ???
-      // Auto login after successful registration
-      await login({
-        email: formData.email,
-        password: formData.password,
+      if (result.success) {
+        router.push("/home"); // Redirect to home after successful registration
+      } else {
+        setError("root", {
+          type: "manual",
+          message: result.error || "Registration failed. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("root", {
+        type: "manual",
+        message: "An unexpected error occurred. Please try again.",
       });
-
-      router.push("/home");
-    } catch (err) {
-      setError("Failed to register. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-      {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
       <div className="rounded-md shadow-sm">
         {/* Full Name Field */}
         <div className="mb-4">
@@ -74,48 +61,48 @@ export function RegisterForm() {
           </label>
           <input
             id="name"
-            name="name"
-            type="text"
-            required
-            value={formData.name}
-            onChange={handleChange}
-            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+            {...register("name", { required: "Full name is required" })}
+            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Full Name"
           />
+          {errors.name && (
+            <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+          )}
         </div>
 
         {/* Email Field */}
         <div className="mb-4">
-          <label htmlFor="email" className="sr-only">
-            Email address
-          </label>
           <input
             id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
+            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Email address"
           />
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password Field */}
         <div className="relative mb-4">
-          <label htmlFor="password" className="sr-only">
-            Password
-          </label>
           <input
             id="password"
-            name="password"
             type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            required
-            value={formData.password}
-            onChange={handleChange}
-            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+            {...register("password", {
+              required: "Password is required",
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+                message:
+                  "Password must contain at least 8 characters, one uppercase, one lowercase and one special character",
+              },
+            })}
+            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Password"
           />
           <div
@@ -128,22 +115,24 @@ export function RegisterForm() {
               <HiOutlineEye className="h-5 w-5 text-gray-500" />
             )}
           </div>
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         {/* Confirm Password Field */}
         <div className="relative">
-          <label htmlFor="confirmPassword" className="sr-only">
-            Confirm Password
-          </label>
           <input
             id="confirmPassword"
-            name="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
-            autoComplete="new-password"
-            required
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
+            {...register("confirmPassword", {
+              required: "Please confirm your password",
+              validate: (value) =>
+                value === password || "The passwords do not match",
+            })}
+            className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             placeholder="Confirm Password"
           />
           <div
@@ -156,6 +145,11 @@ export function RegisterForm() {
               <HiOutlineEye className="h-5 w-5 text-gray-500" />
             )}
           </div>
+          {errors.confirmPassword && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.confirmPassword.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -164,7 +158,7 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={loading}
-          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition duration-200 ease-in-out"
+          className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
         >
           {loading ? "Creating account..." : "Create account"}
         </button>

@@ -10,6 +10,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://soulsadhnabe.onrender.com/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
