@@ -4,6 +4,7 @@ import { createContext, useState, useEffect } from "react";
 import { ROLES } from "@/utils/roles";
 import { verifyAuth } from "@/utils/auth";
 import { useRouter } from "next/navigation";
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
@@ -50,12 +51,12 @@ export function AuthProvider({ children }) {
         }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
+      if (response.status !== 200) {
+        const error = await response.data;
         throw new Error(error.message || "Login failed");
       }
 
-      const { token } = await response.json();
+      const { token } = await response.data;
       localStorage.setItem("token", token);
 
       // Use verifyAuth to set user data from token
@@ -74,24 +75,27 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (userData) => {
+    console.log(userData);
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        userData,
         {
-          method: "POST",
           headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
+            'Content-Type': 'application/json'
+          }
         }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
+      console.log("response : ", response);
+
+      if (response.status !== 201) {
+        const error = await response.data;
         throw new Error(error.message || "Registration failed");
       }
 
-      const { token } = await response.json();
+      
+      const { token } = await response.data;
       localStorage.setItem("token", token);
 
       // Use verifyAuth to set user data from token
@@ -99,6 +103,7 @@ export function AuthProvider({ children }) {
       setUser(newUser);
       return newUser;
     } catch (error) {
+      console.log("error : ", error);
       throw error;
     }
   };

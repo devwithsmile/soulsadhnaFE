@@ -17,12 +17,14 @@ export function RegisterForm() {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm();
 
   const password = watch("password");
 
   const onSubmit = async (data) => {
+    console.log(data);
     setLoading(true);
     try {
       await authRegister({
@@ -31,13 +33,14 @@ export function RegisterForm() {
         password: data.password,
       });
 
-      await login({
-        email: data.email,
-        password: data.password,
-      });
+      // await login({
+      //   email: data.email,
+      //   password: data.password,
+      // });
 
       router.push("/home");
     } catch (err) {
+      console.log("err : ",err);
       setError("Failed to register. Please try again.");
     } finally {
       setLoading(false);
