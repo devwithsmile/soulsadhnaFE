@@ -11,7 +11,7 @@ export function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login, register: authRegister } = useAuth();
+  const { register: authRegister } = useAuth();
 
   const {
     register,
@@ -24,24 +24,28 @@ export function RegisterForm() {
   const password = watch("password");
 
   const onSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
     try {
-      await authRegister({
+      const result = await authRegister({
         name: data.name,
         email: data.email,
         password: data.password,
       });
 
-      // await login({
-      //   email: data.email,
-      //   password: data.password,
-      // });
-
-      router.push("/home");
-    } catch (err) {
-      console.log("err : ",err);
-      setError("Failed to register. Please try again.");
+      if (result.success) {
+        router.push("/home"); // Redirect to home after successful registration
+      } else {
+        setError("root", {
+          type: "manual",
+          message: result.error || "Registration failed. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("root", {
+        type: "manual",
+        message: "An unexpected error occurred. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -112,7 +116,9 @@ export function RegisterForm() {
             )}
           </div>
           {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
           )}
         </div>
 

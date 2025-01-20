@@ -22,19 +22,24 @@ export function LoginForm() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await login(data);
-      if (response?.success) {
-        router.push("/home");
+      const result = await login({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result.success) {
+        router.push("/home"); // Redirect to home after successful login
       } else {
         setError("root", {
           type: "manual",
-          message: "Invalid credentials. Please try again.",
+          message: result.error || "Invalid credentials. Please try again.",
         });
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Login error:", error);
       setError("root", {
         type: "manual",
-        message: "Invalid credentials. Please try again.",
+        message: "An unexpected error occurred. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -81,14 +86,16 @@ export function LoginForm() {
           <input
             id="password"
             {...register("password", {
-              required: "Password is required"
+              required: "Password is required",
             })}
             type={showPassword ? "text" : "password"}
             className="appearance-none rounded-md relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out"
             placeholder="Password"
           />
           {errors.password && (
-            <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+            <p className="mt-1 text-sm text-red-500">
+              {errors.password.message}
+            </p>
           )}
           <div
             className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
