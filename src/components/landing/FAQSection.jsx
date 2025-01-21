@@ -35,58 +35,48 @@ const FAQ_DATA = [
 ];
 
 export function FAQSection() {
+  const [openIndex, setOpenIndex] = useState(null);
+
   return (
-    <section className="py-16 bg-gray-50 full-bleed">
+    <section className="py-16 bg-accent/50 full-bleed">
       <div className="container mx-auto px-4">
-        <h2 className="text-center text-2xl font-semibold mb-12">
+        <h2 className="text-center text-2xl font-semibold mb-12 text-text">
           Frequently Asked Questions
         </h2>
         <div className="max-w-3xl mx-auto space-y-4">
-          {FAQ_DATA.map((item, i) => {
-            const [isOpen, setIsOpen] = useState(false);
-
+          {FAQ_DATA.map((item, index) => {
+            const isOpen = openIndex === index;
             return (
-              <div key={i} className="bg-white p-6 rounded-lg shadow-md">
-                <div
-                  className="flex justify-between items-center cursor-pointer"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <h3 className="font-semibold">{item.question}</h3>
-                  <button className="text-gray-600 focus:outline-none">
-                    {isOpen ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 16V8m0 0l4 4m-4-4l-4 4"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v8m0 0l4-4m-4 4l-4-4"
-                        />
-                      </svg>
-                    )}
+              <div
+                key={index}
+                className="border border-accent rounded-lg overflow-hidden"
+              >
+                <div className="p-4 bg-accent">
+                  <button
+                    onClick={() => setOpenIndex(isOpen ? null : index)}
+                    className="flex justify-between items-center w-full text-left"
+                  >
+                    <span className="font-medium text-text">
+                      {item.question}
+                    </span>
+                    <svg
+                      className={`w-5 h-5 text-primary transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
                   </button>
+                  {isOpen && <p className="mt-4 text-text/50">{item.answer}</p>}
                 </div>
-                {isOpen && <p className="text-gray-600 mt-2">{item.answer}</p>}
               </div>
             );
           })}

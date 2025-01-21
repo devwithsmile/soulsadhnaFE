@@ -30,21 +30,21 @@
 @layer components {
   .btn-primary {
     @apply bg-primary text-white hover:bg-primary-dark 
-           font-bold py-2 px-4 rounded transition-colors;
+           font-bold rounded-md transition-colors;
   }
 
   .btn-secondary {
     @apply bg-secondary text-white hover:bg-secondary-dark 
-           font-bold py-2 px-4 rounded transition-colors;
+           font-bold rounded-md transition-colors;
   }
 
   .input-field {
-    @apply border border-accent rounded px-3 py-2 
+    @apply border border-accent rounded-md
            focus:outline-none focus:ring-2 focus:ring-primary;
   }
 }
 
 .full-bleed {
-  box-shadow: 0 0 0 100vmax #f9fafb;
+  box-shadow: 0 0 0 100vmax #ccecf7;
   clip-path: inset(0 -100vmax);
 }
