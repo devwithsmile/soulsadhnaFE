@@ -2,15 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    /* System colors */
+    --background: 229 248 255; /* #e5f8ff */
+    --foreground: 15 16 16; /* #0f1010 */
+
+    /* Font families will be handled by Next.js font loading */
+  }
+
+  /* Base styles */
+  body {
+    @apply bg-bg-main text-text font-body;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold;
+  }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Common component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark 
+           font-bold py-2 px-4 rounded transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary-dark 
+           font-bold py-2 px-4 rounded transition-colors;
+  }
+
+  .input-field {
+    @apply border border-accent rounded px-3 py-2 
+           focus:outline-none focus:ring-2 focus:ring-primary;
+  }
 }
 
 .full-bleed {
