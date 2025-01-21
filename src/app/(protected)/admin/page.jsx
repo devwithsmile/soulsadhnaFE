@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
+import { AdminEventManagement } from "@/components/admin/AdminEventManagement";
 
 export default function AdminDashboard() {
   return (
@@ -14,7 +15,10 @@ export default function AdminDashboard() {
             Manage your users and monitor platform activity
           </p>
         </div>
-        <AdminUserManagement />
+        <div className=" gap-8">
+          <AdminUserManagement />
+          <AdminEventManagement />
+        </div>
       </div>
     </div>
   );
