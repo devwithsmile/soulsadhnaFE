@@ -66,7 +66,7 @@ export function AdminEventManagement() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow p-6 h-fit">
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6 h-fit">
         <div className="animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="space-y-3">
@@ -83,80 +83,121 @@ export function AdminEventManagement() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 h-fit">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">
-        Event Management
-      </h2>
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 h-fit">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+          Event Management
+        </h2>
+        {events.length > 1 && (
+          <p className="text-xs sm:text-sm text-gray-600">
+            Showing {events.length} event{events.length !== 1 ? "s" : ""}
+          </p>
+        )}
+      </div>
 
       {error && (
-        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative text-sm">
           {error}
         </div>
       )}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr className="text-center">
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Event Name
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Time
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price (₹)
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Meet Link
-              </th>
-              <th className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {Array.isArray(events) &&
-              events.map((event) => (
-                <tr key={event._id} className="text-center">
-                  <td className="px-6 py-4 whitespace-nowrap">{event.title}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{event.date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {event.startTime} - {event.endTime}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {event.price.toFixed(2)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <a
-                      href={event.meetLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      Link
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      onClick={() => handleEventClick(event._id)}
-                      className="text-indigo-600 hover:text-indigo-900 flex items-center gap-2"
-                    >
-                      <FaEdit className="h-4 w-4" />
-                      <span>Edit</span>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <div className="inline-block min-w-full align-middle">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Event Name
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Date
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Time
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Price (₹)
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Meet Link
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-2 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {Array.isArray(events) &&
+                events.map((event) => (
+                  <tr key={event._id}>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm font-medium text-gray-900">
+                        {event.title}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-500">
+                        {event.date}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-500">
+                        {event.startTime} - {event.endTime}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <div className="text-xs sm:text-sm text-gray-500">
+                        {event.price.toFixed(2)}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <a
+                        href={event.meetLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs sm:text-sm text-blue-600 hover:underline"
+                      >
+                        Link
+                      </a>
+                    </td>
+                    <td className="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap">
+                      <button
+                        onClick={() => handleEventClick(event._id)}
+                        className="text-xs sm:text-sm text-indigo-600 hover:text-indigo-900 flex items-center gap-1 sm:gap-2"
+                      >
+                        <FaEdit className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span>Edit</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
 
-        {(!events || events.length === 0) && !loading && (
-          <div className="text-center py-4 text-gray-500">No events found</div>
-        )}
+          {(!events || events.length === 0) && !loading && (
+            <div className="text-center py-4 text-sm text-gray-500">
+              No events found
+            </div>
+          )}
+        </div>
       </div>
 
       <EventModal
