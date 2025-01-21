@@ -15,7 +15,7 @@ export default function AdminDashboard() {
             Manage your users and monitor platform activity
           </p>
         </div>
-        <div className=" gap-8">
+        <div className="space-y-4 md:space-y-8">
           <AdminUserManagement />
           <AdminEventManagement />
         </div>
