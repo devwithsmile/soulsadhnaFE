@@ -10,11 +10,12 @@ import axios from "axios";
 function GoogleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { googleLogin } = useAuth();
 
   useEffect(() => {
     const handleGoogleCallback = async () => {
       try {
+        // console.log("Count ");
         const code = searchParams.get("code");
         const state = searchParams.get("state");
         const savedState = localStorage.getItem("oauth_state");
@@ -40,12 +41,16 @@ function GoogleCallbackContent() {
 
         // Axios response.data already contains the parsed JSON
         const { token } = response.data;
+        // console.log("token from google callback", token);
 
-        // Use the existing login mechanism to set the token and user state
-        await login({ token });
+        const { success, user, error } = await googleLogin({ token });
 
-        // Redirect to Home page
-        router.push("/home");
+        if (success) {
+          // console.log("user from google callback", user);
+          router.push("/home");
+        } else {
+          throw new Error(error);
+        }
       } catch (error) {
         console.error("Google callback error:", error.message || error);
         const errorMessage = error.response?.data?.message || error.message;
@@ -55,8 +60,10 @@ function GoogleCallbackContent() {
 
     if (searchParams.get("code")) {
       handleGoogleCallback();
+    } else {
+      router.push("/login?error=No code found");
     }
-  }, [searchParams, router, login]);
+  }, []);
 
   return <LoadingSpinner size="large" fullScreen={true} />;
 }

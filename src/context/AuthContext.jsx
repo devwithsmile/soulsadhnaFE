@@ -135,12 +135,40 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // New method specifically for Google OAuth
+  const googleLogin = async ({ token }) => {
+    try {
+      if (!token) {
+        throw new Error("Google Login failed");
+      }
+
+      localStorage.setItem("token", token);
+
+      // Use verifyAuth to set user data from token
+      const userData = verifyAuth(token);
+      setUser(userData);
+
+      return {
+        success: true,
+        user: userData,
+      };
+    } catch (error) {
+      const errorMessage =
+        error.message || "An error occurred during Google login";
+      return {
+        success: false,
+        error: errorMessage,
+      };
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     logout,
     register,
+    googleLogin,
     isAdmin: user?.role === ROLES.ADMIN,
     isAuthenticated: !!user,
   };
