@@ -7,6 +7,10 @@
   --foreground: #171717;
 }
 
+:root:has(.no-scroll) {
+  overflow: hidden;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

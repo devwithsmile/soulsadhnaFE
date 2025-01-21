@@ -90,7 +90,7 @@ export function AdminUserManagement() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="w-full md:w-1/3 space-y-4">
       <UserList
         users={currentUsers}
         totalUsers={users.length}
