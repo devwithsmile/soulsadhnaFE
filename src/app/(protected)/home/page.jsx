@@ -59,7 +59,9 @@ export default function HomePage() {
       );
       setEvent(response.data);
     } catch (error) {
-      setError("Failed to fetch event details");
+      setError(
+        "Failed to fetch event details. Please check your internet connection or try again later."
+      );
       console.error("Error fetching event details:", error);
     } finally {
       setLoading(false);
