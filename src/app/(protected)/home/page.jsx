@@ -73,6 +73,7 @@ export default function HomePage() {
 
   const handleBookEvent = async () => {
     try {
+      // TODO: Once Payment integrated, Call Book the event api
       // const response = await axios.post(
       //   `${process.env.NEXT_PUBLIC_API_URL}/events/${event._id}/book`,
       //   {
@@ -114,19 +115,14 @@ export default function HomePage() {
     >
       {/* Background leaf decorations */}
       <IoLeaf
-        className="absolute top-10 left-10 text-indigo-200 opacity-50 transform rotate-45"
+        className="absolute top-10 left-10 text-indigo-200 opacity-50 rotate-45"
         size={100}
       />
       <TbGymnastics
-        className="absolute bottom-20 left-40 text-indigo-200 opacity-50 transform rotate-45"
+        className="absolute bottom-20 right-10 md:right-15 text-indigo-200 opacity-50 rotate-45"
         size={100}
       />
-      <MdOutlineDiversity2
-        className="absolute top-15 -right-10 text-indigo-200 opacity-50 transform rotate-45"
-        size={100}
-      />
-
-      <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-all hover:scale-105">
+      <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl overflow-hidden">
         {event ? (
           <div className="relative">
             {/* Yoga icon watermark */}
@@ -196,7 +192,7 @@ export default function HomePage() {
                 {isFirstTime ? (
                   <button
                     onClick={handleBookEvent}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
+                    className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-700 shadow-lg hover:shadow-xl"
                   >
                     Book Event
                   </button>
@@ -205,7 +201,7 @@ export default function HomePage() {
                     href={event.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex justify-center items-center px-4 py-3 border-2 border-indigo-600 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg"
+                    className="w-full inline-flex justify-center items-center px-4 py-3 border-2 border-indigo-600 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white shadow-md hover:shadow-lg"
                   >
                     Join Now
                   </a>
