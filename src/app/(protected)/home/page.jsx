@@ -207,7 +207,7 @@ export default function HomePage() {
                     rel="noopener noreferrer"
                     className="w-full inline-flex justify-center items-center px-4 py-3 border-2 border-indigo-600 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg"
                   >
-                    View Event Details
+                    Join Now
                   </a>
                 )}
               </div>
