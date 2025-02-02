@@ -36,3 +36,6 @@ jobs:
           push: true
           tags: |
             devwithsmile007/soulsadhanafe:latest 
+          secrets: |
+            NEXT_PUBLIC_API_URL= ${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID= ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
