@@ -19,7 +19,7 @@ export default function HomePage() {
   const [isFirstTime, setIsFirstTime] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeLeft, setTimeLeft] = useState({});
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
   useEffect(() => {
     const isFirstLogin = localStorage.getItem("isFirstLogin") !== "false";
@@ -32,11 +32,23 @@ export default function HomePage() {
   useEffect(() => {
     if (event) {
       const convertedDate = convertDateFormat(event.date);
-      console.log(event.date, convertedDate);
+      console.log(
+        "Original date:",
+        event.date,
+        "Converted date:",
+        convertedDate
+      );
       const timer = setInterval(() => {
         const eventDate = new Date(convertedDate).getTime();
         const now = new Date().getTime();
         const distance = eventDate - now;
+
+        // If the event time has passed, stop the timer and set countdown to 0
+        if (distance <= 0) {
+          setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+          clearInterval(timer);
+          return;
+        }
 
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
@@ -191,7 +203,7 @@ export default function HomePage() {
 
               {/* Action Button */}
               <div className="mt-6">
-                {isFirstTime ? (
+                {isFirstTime && user.role !== "admin" ? (
                   <button
                     onClick={handleBookEvent}
                     className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-700 shadow-lg hover:shadow-xl"
