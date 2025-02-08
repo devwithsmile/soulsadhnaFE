@@ -16,7 +16,7 @@ export function AdminEventManagement() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/events/67868bac28a0355a6fdc683b`,
+        `${process.env.NEXT_PUBLIC_API_URL}/events/`+ process.env.NEXT_PUBLIC_EVENT_ID,
         {
           headers: {
             Authorization: `Bearer ${token}`,
