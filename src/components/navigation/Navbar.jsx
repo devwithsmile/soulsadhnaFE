@@ -13,7 +13,7 @@ export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const username = user?.email?.split("@")[0];
+  const username = user?.name || "Username";
 
   // Close mobile menu on navigation
   useEffect(() => {
