@@ -15,16 +15,12 @@ export default function HomePage() {
   const { user } = useAuth();
   const router = useRouter();
   const [event, setEvent] = useState(null);
-  const [isFirstTime, setIsFirstTime] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
   // If they are firstTime user or not
   useEffect(() => {
-    const isFirstLogin = localStorage.getItem("isFirstLogin") !== "false";
-    setIsFirstTime(isFirstLogin);
-
     fetchEventDetails();
   }, []);
 
@@ -81,7 +77,25 @@ export default function HomePage() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/events/${process.env.NEXT_PUBLIC_EVENT_ID}`
       );
-      setEvent(response.data);
+      // Assume response.data is the event object
+      let eventData = response.data;
+      // Add paymentStatus field if it doesn't exist, set default to true
+      if (typeof eventData.paymentStatus === "undefined") {
+        eventData.paymentStatus = true;
+      }
+
+      // // * For authenticated users, check the payment status through an extra API call
+      // if (user) {
+      //   const paymentResponse = await axios.get(
+      //     `${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}/payment-status`
+      //   );
+      //   // Update eventData.paymentStatus if available from the payment check endpoint
+      //   if (typeof paymentResponse.data.paymentStatus !== "undefined") {
+      //     eventData.paymentStatus = paymentResponse.data.paymentStatus;
+      //   }
+      // }
+
+      setEvent(eventData);
     } catch (error) {
       setError(
         "Failed to fetch event details. Please check your internet connection or try again later."
@@ -204,7 +218,7 @@ export default function HomePage() {
                   </span>
                 </div>
 
-                {isFirstTime && (
+                {event?.paymentStatus && (
                   <div className="flex items-center gap-2">
                     <PiCurrencyInrFill className="text-indigo-600" size={24} />
                     <span className="text-xs sm:text-sm font-medium text-gray-900">
@@ -216,7 +230,7 @@ export default function HomePage() {
 
               {/* Action Button */}
               <div className="mt-6">
-                {isFirstTime && user.role !== "admin" ? (
+                {event?.paymentStatus && user.role !== "admin" ? (
                   <button
                     onClick={handleBookEvent}
                     className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-700 shadow-lg hover:shadow-xl"
