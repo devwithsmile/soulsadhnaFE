@@ -10,7 +10,6 @@ import { GrYoga } from "react-icons/gr";
 import { IoLeaf } from "react-icons/io5";
 import { useAuth } from "@/hooks/useAuth";
 import { TbGymnastics } from "react-icons/tb";
-import { MdOutlineDiversity2 } from "react-icons/md";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -21,6 +20,7 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
 
+  // If they are firstTime user or not
   useEffect(() => {
     const isFirstLogin = localStorage.getItem("isFirstLogin") !== "false";
     setIsFirstTime(isFirstLogin);
@@ -30,37 +30,49 @@ export default function HomePage() {
 
   // Countdown timer effect
   useEffect(() => {
-    if (event) {
-      const convertedDate = convertDateFormat(event.date);
-      console.log(
-        "Original date:",
-        event.date,
-        "Converted date:",
-        convertedDate
+    if (!event) return;
+
+    console.group("Countdown Timer");
+
+    // Convert event date to 'MM-DD-YYYY' format
+    const eventDateFormatted = convertDateFormat(event.date);
+    const eventDateTime = `${eventDateFormatted} ${event.startTime}`;
+    const eventTime = new Date(eventDateTime).getTime();
+
+    console.log("Event Details:", {
+      originalDate: event.date,
+      originalTime: event.startTime,
+      formattedDate: eventDateFormatted,
+      fullDateTime: eventDateTime
+    });
+
+    const timer = setInterval(() => {
+      const now = Date.now();
+      const timeDifference = eventTime - now;
+
+      if (timeDifference <= 0) {
+        clearInterval(timer);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
+        console.log("Countdown Complete.");
+        return;
+      }
+
+      console.log("Countdown Running...");
+
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
-      const timer = setInterval(() => {
-        const eventDate = new Date(convertedDate).getTime();
-        const now = new Date().getTime();
-        const distance = eventDate - now;
+      const minutes = Math.floor(
+        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+      );
 
-        // If the event time has passed, stop the timer and set countdown to 0
-        if (distance <= 0) {
-          setTimeLeft({ days: 0, hours: 0, minutes: 0 });
-          clearInterval(timer);
-          return;
-        }
+      setTimeLeft({ days, hours, minutes });
+    }, 1000);
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    console.groupEnd();
 
-        setTimeLeft({ days, hours, minutes });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
+    return () => clearInterval(timer);
   }, [event]);
 
   const fetchEventDetails = async () => {
@@ -80,6 +92,7 @@ export default function HomePage() {
     }
   };
 
+  // Helper function to convert date format from 'DD-MM-YYYY' to 'MM-DD-YYYY'
   const convertDateFormat = (date) => {
     const [day, month, year] = date.split("-");
     return `${month}-${day}-${year}`;
