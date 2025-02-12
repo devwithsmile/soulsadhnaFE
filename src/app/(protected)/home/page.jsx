@@ -1,116 +1,136 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-import { PiCurrencyInrFill } from "react-icons/pi";
-import { FiCalendar, FiClock } from "react-icons/fi";
-import { GrYoga } from "react-icons/gr";
-import { IoLeaf } from "react-icons/io5";
-import { useAuth } from "@/hooks/useAuth";
-import { TbGymnastics } from "react-icons/tb";
+import { useState, useEffect } from "react"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+import { LoadingSpinner } from "@/components/common/LoadingSpinner"
+import { PiCurrencyInrFill } from "react-icons/pi"
+import { FiCalendar, FiClock } from "react-icons/fi"
+import { GrYoga } from "react-icons/gr"
+import { IoLeaf } from "react-icons/io5"
+import { useAuth } from "@/hooks/useAuth"
+import { TbGymnastics } from "react-icons/tb"
 
 export default function HomePage() {
-  const { user } = useAuth();
-  const router = useRouter();
-  const [event, setEvent] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 });
+  const { user } = useAuth()
+  const router = useRouter()
+  const [event, setEvent] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0 })
 
   // If they are firstTime user or not
   useEffect(() => {
-    fetchEventDetails();
-  }, []);
+    fetchEventDetails()
+  }, [])
 
   // Countdown timer effect
   useEffect(() => {
-    if (!event) return;
+    if (!event) return
 
-    console.group("Countdown Timer");
+    console.group("Countdown Timer")
 
     // Convert event date to 'MM-DD-YYYY' format
-    const eventDateFormatted = convertDateFormat(event.date);
-    const eventDateTime = `${eventDateFormatted} ${event.startTime}`;
-    const eventTime = new Date(eventDateTime).getTime();
+    const eventDateFormatted = convertDateFormat(event.date)
+    const eventDateTime = `${eventDateFormatted} ${event.startTime}`
+    const eventTime = new Date(eventDateTime).getTime()
 
     console.log("Event Details:", {
       originalDate: event.date,
       originalTime: event.startTime,
       formattedDate: eventDateFormatted,
       fullDateTime: eventDateTime
-    });
+    })
 
     const timer = setInterval(() => {
-      const now = Date.now();
-      const timeDifference = eventTime - now;
+      const now = Date.now()
+      const timeDifference = eventTime - now
 
       if (timeDifference <= 0) {
-        clearInterval(timer);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0 });
-        console.log("Countdown Complete.");
-        return;
+        clearInterval(timer)
+        setTimeLeft({ days: 0, hours: 0, minutes: 0 })
+        console.log("Countdown Complete.")
+        return
       }
 
-      console.log("Countdown Running...");
+      console.log("Countdown Running...")
 
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24))
       const hours = Math.floor(
         (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
+      )
       const minutes = Math.floor(
         (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-      );
+      )
 
-      setTimeLeft({ days, hours, minutes });
-    }, 1000);
+      setTimeLeft({ days, hours, minutes })
+    }, 1000)
 
-    console.groupEnd();
+    console.groupEnd()
 
-    return () => clearInterval(timer);
-  }, [event]);
+    return () => clearInterval(timer)
+  }, [event])
 
   const fetchEventDetails = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
+
+      // Fetch event details
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/events/${process.env.NEXT_PUBLIC_EVENT_ID}`
-      );
-      // Assume response.data is the event object
-      let eventData = response.data;
-      // Add paymentStatus field if it doesn't exist, set default to true
-      if (typeof eventData.paymentStatus === "undefined") {
-        eventData.paymentStatus = true;
+      )
+      let eventData = response.data
+
+      // * Check the payment status through an extra API call
+      if (user) {
+        const token = localStorage.getItem("token")
+
+        if (token) {
+          try {
+            const paymentResponse = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/events/payments/${eventData._id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            )
+
+            console.log(paymentResponse)
+
+            // This sets eventData.paymentStatus to true if paymentResponse.data.status is "SUCCESS", and false otherwise (including "FAILED" and any other unexpected values).
+            eventData.paymentStatus = paymentResponse.data.status === "SUCCESS"
+          } catch (paymentError) {
+            console.error("Error fetching payment status:", paymentError)
+            // Handle payment status error (optional: set eventData.paymentStatus to a default value)
+            eventData.paymentStatus = false
+          }
+        } else {
+          eventData.paymentStatus = false
+          console.warn(
+            "No authentication token found. Skipping payment status check."
+          )
+        }
       }
 
-      // // * For authenticated users, check the payment status through an extra API call
-      // if (user) {
-      //   const paymentResponse = await axios.get(
-      //     `${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}/payment-status`
-      //   );
-      //   // Update eventData.paymentStatus if available from the payment check endpoint
-      //   if (typeof paymentResponse.data.paymentStatus !== "undefined") {
-      //     eventData.paymentStatus = paymentResponse.data.paymentStatus;
-      //   }
-      // }
+      console.log(eventData)
 
-      setEvent(eventData);
+      setEvent(eventData)
     } catch (error) {
       setError(
         "Failed to fetch event details. Please check your internet connection or try again later."
-      );
-      console.error("Error fetching event details:", error);
+      )
+      console.error("Error fetching event details:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Helper function to convert date format from 'DD-MM-YYYY' to 'MM-DD-YYYY'
   const convertDateFormat = (date) => {
-    const [day, month, year] = date.split("-");
-    return `${month}-${day}-${year}`;
-  };
+    const [day, month, year] = date.split("-")
+    return `${month}-${day}-${year}`
+  }
 
   const handleBookEvent = async () => {
     try {
@@ -122,19 +142,19 @@ export default function HomePage() {
       //     userEmail: user.email,
       //   }
       // );
-      const response = false;
+      const response = false
 
       if (response || true) {
-        localStorage.setItem("isFirstLogin", "false");
-        router.push("/mock-payment");
+        localStorage.setItem("isFirstLogin", "false")
+        router.push("/mock-payment")
       }
     } catch (error) {
-      setError("Failed to book event");
-      console.error("Error booking event:", error);
+      setError("Failed to book event")
+      console.error("Error booking event:", error)
     }
-  };
+  }
 
-  if (loading) return <LoadingSpinner fullScreen />;
+  if (loading) return <LoadingSpinner fullScreen />
 
   if (error) {
     return (
@@ -145,7 +165,7 @@ export default function HomePage() {
           <p className="text-gray-700">{error}</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -230,7 +250,7 @@ export default function HomePage() {
 
               {/* Action Button */}
               <div className="mt-6">
-                {event?.paymentStatus && user.role !== "admin" ? (
+                {!event?.paymentStatus && user.role !== "admin" ? (
                   <button
                     onClick={handleBookEvent}
                     className="w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-indigo-600 text-white rounded-lg hover:from-indigo-700 hover:to-indigo-700 shadow-lg hover:shadow-xl"
@@ -268,5 +288,5 @@ export default function HomePage() {
         )}
       </div>
     </div>
-  );
+  )
 }
