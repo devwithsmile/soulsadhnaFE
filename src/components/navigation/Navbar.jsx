@@ -145,10 +145,7 @@ export function Navbar() {
                     Admin Panel
                   </Link>
                 )}
-                <div className="px-3 py-2">
-                  <div className="text-sm text-gray-700 mb-2 capitalize">
-                    {username}
-                  </div>
+                <div className="px-3 py-2">                  
                   <button
                     onClick={logout}
                     className="w-full text-left py-2 rounded-md text-base font-medium text-indigo-600 hover:bg-gray-50 transition-colors"
